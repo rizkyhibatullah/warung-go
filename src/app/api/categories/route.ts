@@ -21,22 +21,26 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json()
-    const { name, type } = body
+    const { name } = body
 
-    if (!name || !type) {
-      return Response.json({ error: "Missing required fields" }, { status: 400 })
+    if (!name) {
+      return Response.json({ error: "Nama kategori harus diisi" }, { status: 400 })
     }
 
     const category = await prisma.category.create({
       data: {
         name,
-        type,
         createdBy: session.user.id,
       },
     })
 
     return Response.json(category, { status: 201 })
   } catch (error) {
-    return Response.json({ error: "Failed to create category" }, { status: 500 })
+    const message = error instanceof Error ? error.message : "Unknown error"
+    console.error("Category create error:", message)
+    return Response.json(
+      { error: "Failed to create category", detail: process.env.NODE_ENV === "development" ? message : undefined },
+      { status: 500 }
+    )
   }
 }

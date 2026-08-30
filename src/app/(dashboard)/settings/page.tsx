@@ -28,7 +28,6 @@ interface Settings {
 interface Category {
   id: string
   name: string
-  type: string
   _count?: { products: number }
 }
 
@@ -182,10 +181,8 @@ export default function SettingsPage() {
 
   const [categories, setCategories] = useState<Category[]>([])
   const [newCatName, setNewCatName] = useState("")
-  const [newCatType, setNewCatType] = useState("makanan")
   const [editingCat, setEditingCat] = useState<Category | null>(null)
   const [editCatName, setEditCatName] = useState("")
-  const [editCatType, setEditCatType] = useState("")
 
   const [users, setUsers] = useState<User[]>([])
   const [showUserModal, setShowUserModal] = useState(false)
@@ -326,7 +323,7 @@ export default function SettingsPage() {
       const res = await fetch("/api/categories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: newCatName.trim(), type: newCatType }),
+        body: JSON.stringify({ name: newCatName.trim() }),
       })
       if (!res.ok) {
         const err = await res.json()
@@ -335,7 +332,6 @@ export default function SettingsPage() {
       const cat = await res.json()
       setCategories((prev) => [cat, ...prev])
       setNewCatName("")
-      setNewCatType("makanan")
       toast.success("Kategori ditambahkan")
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Gagal menambah kategori")
@@ -351,7 +347,7 @@ export default function SettingsPage() {
       const res = await fetch(`/api/categories/${editingCat.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: editCatName.trim(), type: editCatType }),
+        body: JSON.stringify({ name: editCatName.trim() }),
       })
       if (!res.ok) {
         const err = await res.json()
@@ -388,7 +384,6 @@ export default function SettingsPage() {
   const openEditCategory = (cat: Category) => {
     setEditingCat(cat)
     setEditCatName(cat.name)
-    setEditCatType(cat.type)
   }
 
   const handleAddUser = async () => {
@@ -530,7 +525,7 @@ export default function SettingsPage() {
 
       {/* Kategori Produk */}
       <Card>
-        <CardHeader icon={TagIcon} title="Kategori Produk" subtitle="Kelola kategori makanan dan minuman" />
+        <CardHeader icon={TagIcon} title="Kategori Produk" subtitle="Kelola kategori produk" />
         <div className="p-6 space-y-4">
           {categories.length > 0 ? (
             <div className="space-y-2">
@@ -538,7 +533,6 @@ export default function SettingsPage() {
                 <div key={cat.id} className="flex items-center justify-between p-3 bg-white rounded-xl border border-cream-dark/50">
                   <div className="flex items-center gap-3 min-w-0">
                     <span className="text-sm font-medium text-charcoal truncate">{cat.name}</span>
-                    <Badge variant={cat.type as "makanan" | "minuman"}>{cat.type}</Badge>
                     {cat._count && cat._count.products > 0 && (
                       <span className="text-xs text-brown-light/60">{cat._count.products} produk</span>
                     )}
@@ -568,17 +562,6 @@ export default function SettingsPage() {
                   onChange={(e) => setNewCatName(e.target.value)}
                   placeholder="Nama kategori"
                   className="w-full px-4 py-2.5 rounded-xl border border-cream-dark bg-white text-charcoal placeholder:text-brown-light/40 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all text-sm"
-                />
-              </div>
-              <div className="w-36">
-                <Label>Tipe</Label>
-                <Select
-                  value={newCatType}
-                  onChange={setNewCatType}
-                  options={[
-                    { value: "makanan", label: "Makanan" },
-                    { value: "minuman", label: "Minuman" },
-                  ]}
                 />
               </div>
               <button
@@ -643,17 +626,6 @@ export default function SettingsPage() {
           <div>
             <Label>Nama Kategori</Label>
             <Input value={editCatName} onChange={setEditCatName} placeholder="Nama kategori" />
-          </div>
-          <div>
-            <Label>Tipe</Label>
-            <Select
-              value={editCatType}
-              onChange={setEditCatType}
-              options={[
-                { value: "makanan", label: "Makanan" },
-                { value: "minuman", label: "Minuman" },
-              ]}
-            />
           </div>
           <div className="flex justify-end gap-3 pt-2">
             <button onClick={() => setEditingCat(null)} className="px-4 py-2.5 text-sm font-medium text-brown-light hover:text-brown transition-colors">

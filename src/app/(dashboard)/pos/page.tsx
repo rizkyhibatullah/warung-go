@@ -18,13 +18,12 @@ interface Product {
   stockQty: number
   minStockAlert: number
   isActive: boolean
-  category: { id: string; name: string; type: string }
+  category: { id: string; name: string }
 }
 
 interface Category {
   id: string
   name: string
-  type: string
 }
 
 interface OrderItem {
@@ -39,7 +38,6 @@ interface OrderItem {
 interface Order {
   id: string
   customerName: string
-  tableNumber: number | null
   notes: string | null
   status: "pending" | "confirmed" | "done"
   paymentMethod: "counter" | "qris"
@@ -623,9 +621,6 @@ function OrderCard({
               <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-blue-100 text-blue-700 font-medium shrink-0">QRIS</span>
             )}
           </div>
-          {order.tableNumber && (
-            <p className="text-xs text-brown-light mt-0.5">Meja {order.tableNumber}</p>
-          )}
         </div>
         <div className="flex items-center gap-1 text-brown-light/60 text-xs whitespace-nowrap flex-shrink-0">
           <ClockIcon className="w-3.5 h-3.5" />

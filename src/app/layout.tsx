@@ -3,8 +3,8 @@ import "./globals.css"
 import { Toaster } from "react-hot-toast"
 
 export const metadata: Metadata = {
-  title: "Forever Caffe - POS & Manajemen",
-  description: "Aplikasi Point of Sale & Manajemen UMKM Forever Caffe",
+  title: "WarungGo - Warung sembako tetangga, kini di ujung jari",
+  description: "WarungGo menghubungkan pemilik warung sembako dengan pelanggan di sekitarnya. Cari beras, minyak, telur, dan kebutuhan harian dari warung terdekat.",
 }
 
 export default function RootLayout({

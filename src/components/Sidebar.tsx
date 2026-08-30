@@ -34,15 +34,15 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="w-64 bg-brown min-h-screen flex flex-col">
+    <aside className="w-64 bg-brown sticky top-0 h-screen flex flex-col overflow-y-auto shrink-0">
       <div className="p-6 border-b border-brown-light/20">
         <Link href="/pos" className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gold flex items-center justify-center">
-            <span className="text-brown font-serif font-bold text-lg">FC</span>
+            <span className="text-brown font-serif font-bold text-lg">WG</span>
           </div>
           <div>
-            <h1 className="text-cream font-serif font-semibold text-lg leading-tight">Forever</h1>
-            <p className="text-cream-dark text-xs">Caffe</p>
+            <h1 className="text-cream font-serif font-semibold text-lg leading-tight">Warung</h1>
+            <p className="text-cream-dark text-xs">Go</p>
           </div>
         </Link>
       </div>

@@ -12,6 +12,7 @@ import {
   TrashIcon,
   HomeIcon,
   CheckCircleIcon,
+  BuildingStorefrontIcon,
 } from "@heroicons/react/24/outline"
 import { useCartStore } from "@/lib/store"
 import { formatCurrency } from "@/lib/utils"
@@ -27,13 +28,12 @@ interface Product {
   stockQty: number
   minStockAlert: number
   isActive: boolean
-  category: { id: string; name: string; type: string }
+  category: { id: string; name: string }
 }
 
 interface Category {
   id: string
   name: string
-  type: string
 }
 
 interface OrderItemData {
@@ -47,10 +47,11 @@ interface OrderItemData {
 interface Order {
   id: string
   customerName: string
-  tableNumber: number | null
   notes: string | null
   status: string
   paymentMethod?: string
+  deliveryMethod?: string
+  deliveryAddress?: string | null
   createdAt: string
   items: OrderItemData[]
 }
@@ -62,8 +63,9 @@ export default function OrderPage() {
   const [loading, setLoading] = useState(true)
   const [cartOpen, setCartOpen] = useState(false)
   const [customerName, setCustomerName] = useState("")
-  const [tableNumber, setTableNumber] = useState("")
   const [notes, setNotes] = useState("")
+  const [deliveryMethod, setDeliveryMethod] = useState<"pickup" | "delivery">("pickup")
+  const [address, setAddress] = useState("")
   const [submitting, setSubmitting] = useState(false)
   const [successOrder, setSuccessOrder] = useState<Order | null>(null)
   const [isMobile, setIsMobile] = useState(false)
@@ -143,6 +145,10 @@ export default function OrderPage() {
       toast.error("Nama pelanggan harus diisi")
       return
     }
+    if (deliveryMethod === "delivery" && !address.trim()) {
+      toast.error("Alamat pengiriman harus diisi")
+      return
+    }
     if (items.length === 0) {
       toast.error("Pesanan masih kosong")
       return
@@ -152,13 +158,14 @@ export default function OrderPage() {
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          customerName: customerName.trim(),
-          tableNumber: tableNumber ? Number.parseInt(tableNumber) : null,
-          notes: notes.trim() ? notes.trim() : null,
-          paymentMethod,
-          items: items.map((i) => ({ productId: i.productId, qty: i.qty })),
-        }),
+          body: JSON.stringify({
+            customerName: customerName.trim(),
+            notes: notes.trim() ? notes.trim() : null,
+            paymentMethod,
+            deliveryMethod,
+            deliveryAddress: address.trim() || null,
+            items: items.map((i) => ({ productId: i.productId, qty: i.qty })),
+          }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.detail || data.error || "Gagal membuat pesanan")
@@ -166,15 +173,16 @@ export default function OrderPage() {
       clearCart()
       setCartOpen(false)
       setCustomerName("")
-      setTableNumber("")
       setNotes("")
+      setAddress("")
+      setDeliveryMethod("pickup")
       toast.success(paymentMethod === "qris" ? "Pembayaran berhasil! Pesanan dikonfirmasi." : "Pesanan berhasil dikirim!")
     } catch (e: any) {
       toast.error(e.message)
     } finally {
       setSubmitting(false)
     }
-  }, [customerName, tableNumber, notes, items, clearCart, paymentMethod])
+  }, [customerName, notes, items, clearCart, paymentMethod])
 
   const handleQrisConfirm = async () => {
     setQrisConfirming(true)
@@ -192,9 +200,9 @@ export default function OrderPage() {
         <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
             <div className="w-9 h-9 rounded-lg bg-terracotta flex items-center justify-center">
-              <span className="text-white font-serif font-bold text-sm">FC</span>
+              <BuildingStorefrontIcon className="w-5 h-5 text-white" />
             </div>
-            <span className="font-serif font-semibold text-brown text-lg">Forever Caffe</span>
+            <span className="font-serif font-semibold text-brown text-lg">WarungGo</span>
           </Link>
           <div className="flex items-center gap-2">
             <Link
@@ -223,7 +231,7 @@ export default function OrderPage() {
       <main className="max-w-6xl mx-auto px-4 pt-6 pb-32 md:pb-8">
         <div className="mb-8">
           <h1 className="font-serif text-3xl md:text-4xl font-bold text-brown">Pesan Sekarang</h1>
-          <p className="text-brown-light mt-1">Pilih menu favoritmu untuk takeaway atau dine-in</p>
+          <p className="text-brown-light mt-1">Pilih sembako untuk diambil di warung atau diantar</p>
         </div>
 
         <div className="flex gap-2 mb-6 overflow-x-auto pb-1 scrollbar-thin -mx-4 px-4">
@@ -293,7 +301,7 @@ export default function OrderPage() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-5xl">☕</span>
+                        <span className="text-5xl">🛒</span>
                       </div>
                     )}
                     {product.stockQty <= 0 && (
@@ -401,7 +409,7 @@ export default function OrderPage() {
                             {item.imageUrl ? (
                               <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
                             ) : (
-                              <span className="text-brown-light/30 text-lg">☕</span>
+                              <span className="text-brown-light/30 text-lg">🛒</span>
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
@@ -458,22 +466,55 @@ export default function OrderPage() {
                         className="w-full px-3 py-2 rounded-xl border border-cream-dark bg-white text-sm placeholder:text-brown-light/30 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-shadow"
                       />
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex-1">
-                        <label className="block text-xs font-medium text-brown-light mb-1">No. Meja</label>
-                        <input
-                          type="number"
-                          value={tableNumber}
-                          onChange={(e) => setTableNumber(e.target.value)}
-                          placeholder="Opsional"
-                          min="1"
-                          className="w-full px-3 py-2 rounded-xl border border-cream-dark bg-white text-sm placeholder:text-brown-light/30 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-shadow"
-                        />
-                      </div>
-                      <div className="flex-shrink-0 pt-5">
-                        <span className="text-[11px] text-brown-light/50">Kosongkan untuk <br />takeaway</span>
+
+                    <div>
+                      <label className="block text-xs font-medium text-brown-light mb-2">Cara Terima</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setDeliveryMethod("pickup")}
+                          className={`p-3 rounded-xl border-2 text-center transition-all ${
+                            deliveryMethod === "pickup"
+                              ? "border-terracotta bg-terracotta/5 text-terracotta"
+                              : "border-cream-dark bg-white text-brown-light hover:border-brown-light/30"
+                          }`}
+                        >
+                          <span className="block text-xl mb-1">🏪</span>
+                          <span className="text-xs font-medium">Ambil di Warung</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDeliveryMethod("delivery")}
+                          className={`p-3 rounded-xl border-2 text-center transition-all ${
+                            deliveryMethod === "delivery"
+                              ? "border-terracotta bg-terracotta/5 text-terracotta"
+                              : "border-cream-dark bg-white text-brown-light hover:border-brown-light/30"
+                          }`}
+                        >
+                          <span className="block text-xl mb-1">🛵</span>
+                          <span className="text-xs font-medium">Antar ke Alamat</span>
+                        </button>
                       </div>
                     </div>
+
+                    {deliveryMethod === "delivery" && (
+                      <div>
+                        <label className="block text-xs font-medium text-brown-light mb-1">
+                          Alamat Pengiriman <span className="text-terracotta">*</span>
+                        </label>
+                        <textarea
+                          value={address}
+                          onChange={(e) => setAddress(e.target.value)}
+                          placeholder="Nama jalan, nomor rumah, RT/RW, patokan"
+                          rows={2}
+                          className="w-full px-3 py-2 rounded-xl border border-cream-dark bg-white text-sm placeholder:text-brown-light/30 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-shadow resize-none"
+                        />
+                      </div>
+                    )}
+
+                  <p className="text-xs text-brown-light bg-cream rounded-xl px-3 py-2.5">
+                    Pesanan bisa diambil langsung di warung atau minta diantar ke alamatmu.
+                  </p>
 
                     <div>
                       <label className="block text-xs font-medium text-brown-light mb-2">Metode Pembayaran</label>
@@ -627,10 +668,16 @@ function SuccessState({ order, onNewOrder }: { order: Order; onNewOrder: () => v
             ))}
           </div>
 
-          {order.tableNumber && (
-            <div className="flex items-center justify-between text-sm pt-3 border-t border-cream-dark">
-              <span className="text-brown-light">Meja</span>
-              <span className="text-brown font-medium">{order.tableNumber}</span>
+          <div className="flex items-center justify-between text-sm pt-3 border-t border-cream-dark">
+            <span className="text-brown-light">Cara Terima</span>
+            <span className="text-brown font-medium">
+              {order.deliveryMethod === "delivery" ? "Antar ke Alamat" : "Ambil di Warung"}
+            </span>
+          </div>
+          {order.deliveryMethod === "delivery" && order.deliveryAddress && (
+            <div className="pt-2 text-sm text-brown">
+              <span className="text-brown-light">Alamat: </span>
+              {order.deliveryAddress}
             </div>
           )}
 

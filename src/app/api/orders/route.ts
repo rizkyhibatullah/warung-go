@@ -15,7 +15,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { customerName, tableNumber, notes, items, paymentMethod = "counter" } = body
+    const { customerName, notes, items, paymentMethod = "counter", deliveryMethod, deliveryAddress } = body
 
     if (!customerName || !items || !items.length) {
       return Response.json({ error: "Nama dan pesanan harus diisi" }, { status: 400 })
@@ -23,6 +23,10 @@ export async function POST(request: Request) {
 
     if (paymentMethod !== "counter" && paymentMethod !== "qris") {
       return Response.json({ error: "Metode pembayaran tidak valid" }, { status: 400 })
+    }
+
+    if (deliveryMethod !== undefined && deliveryMethod !== "pickup" && deliveryMethod !== "delivery") {
+      return Response.json({ error: "Metode pengiriman tidak valid" }, { status: 400 })
     }
 
     const products = await prisma.product.findMany({
@@ -34,7 +38,7 @@ export async function POST(request: Request) {
       if (!productMap.has(item.productId)) {
         return Response.json({ error: `Produk ${item.productId} tidak ditemukan` }, { status: 400 })
       }
-      if (paymentMethod === "qris" && (productMap.get(item.productId) as any).stockQty < item.qty) {
+      if ((productMap.get(item.productId) as any).stockQty < item.qty) {
         return Response.json({ error: `Stok ${(productMap.get(item.productId) as any).name} tidak mencukupi` }, { status: 400 })
       }
     }
@@ -54,10 +58,11 @@ export async function POST(request: Request) {
         const created = await tx.order.create({
           data: {
             customerName,
-            tableNumber: tableNumber ? Number(tableNumber) : null,
             notes: notes || null,
             status: "confirmed",
             paymentMethod: "qris",
+            deliveryMethod: deliveryMethod === "delivery" ? "delivery" : "pickup",
+            deliveryAddress: deliveryMethod === "delivery" ? deliveryAddress || null : null,
             items: { create: orderItems },
           },
           include: { items: { include: { product: true } } },
@@ -76,15 +81,27 @@ export async function POST(request: Request) {
       return Response.json(order, { status: 201 })
     }
 
-    const order = await prisma.order.create({
-      data: {
-        customerName,
-        tableNumber: tableNumber ? Number(tableNumber) : null,
-        notes: notes || null,
-        paymentMethod: "counter",
-        items: { create: orderItems },
-      },
-      include: { items: { include: { product: true } } },
+    const order = await prisma.$transaction(async (tx: any) => {
+      const created = await tx.order.create({
+        data: {
+          customerName,
+          notes: notes || null,
+          paymentMethod: "counter",
+          deliveryMethod: deliveryMethod === "delivery" ? "delivery" : "pickup",
+          deliveryAddress: deliveryMethod === "delivery" ? deliveryAddress || null : null,
+          items: { create: orderItems },
+        },
+        include: { items: { include: { product: true } } },
+      })
+
+      for (const item of items) {
+        await tx.product.update({
+          where: { id: item.productId },
+          data: { stockQty: { decrement: item.qty } },
+        })
+      }
+
+      return created
     })
 
     return Response.json(order, { status: 201 })

@@ -132,7 +132,6 @@ exports.Prisma.UserScalarFieldEnum = {
 exports.Prisma.CategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  type: 'type',
   createdBy: 'createdBy',
   createdAt: 'createdAt'
 };
@@ -185,10 +184,11 @@ exports.Prisma.TransactionItemScalarFieldEnum = {
 exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
   customerName: 'customerName',
-  tableNumber: 'tableNumber',
   notes: 'notes',
   status: 'status',
   paymentMethod: 'paymentMethod',
+  deliveryMethod: 'deliveryMethod',
+  deliveryAddress: 'deliveryAddress',
   createdAt: 'createdAt'
 };
 
@@ -253,6 +253,11 @@ exports.OrderStatus = exports.$Enums.OrderStatus = {
 exports.OrderPaymentMethod = exports.$Enums.OrderPaymentMethod = {
   counter: 'counter',
   qris: 'qris'
+};
+
+exports.OrderDeliveryMethod = exports.$Enums.OrderDeliveryMethod = {
+  pickup: 'pickup',
+  delivery: 'delivery'
 };
 
 exports.Prisma.ModelName = {

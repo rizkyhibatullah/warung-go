@@ -10,7 +10,6 @@ import { useRouter } from "next/navigation"
 interface Category {
   id: string
   name: string
-  type: string
   _count?: { products: number }
 }
 
@@ -21,7 +20,7 @@ export default function CategoriesPage() {
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
   const [editCategory, setEditCategory] = useState<Category | null>(null)
-  const [form, setForm] = useState({ name: "", type: "minuman" })
+  const [form, setForm] = useState({ name: "" })
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/login")
@@ -32,7 +31,7 @@ export default function CategoriesPage() {
     try {
       const res = await fetch("/api/categories")
       const data = await res.json()
-      setCategories(data)
+      setCategories(Array.isArray(data) ? data : Array.isArray(data?.categories) ? data.categories : [])
     } catch {
       toast.error("Gagal memuat kategori")
     } finally {
@@ -54,7 +53,7 @@ export default function CategoriesPage() {
       toast.success(editCategory ? "Kategori diupdate" : "Kategori ditambahkan")
       setShowModal(false)
       setEditCategory(null)
-      setForm({ name: "", type: "minuman" })
+      setForm({ name: "" })
       fetchCategories()
     } catch {
       toast.error("Gagal menyimpan kategori")
@@ -75,7 +74,7 @@ export default function CategoriesPage() {
 
   const openEdit = (cat: Category) => {
     setEditCategory(cat)
-    setForm({ name: cat.name, type: cat.type })
+    setForm({ name: cat.name })
     setShowModal(true)
   }
 
@@ -87,9 +86,6 @@ export default function CategoriesPage() {
     )
   }
 
-  const makanan = categories.filter((c) => c.type === "makanan")
-  const minuman = categories.filter((c) => c.type === "minuman")
-
   return (
     <div className="max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-8">
@@ -98,7 +94,7 @@ export default function CategoriesPage() {
           <p className="text-brown-light mt-1">Kelola kategori produk</p>
         </div>
         <button
-          onClick={() => { setEditCategory(null); setForm({ name: "", type: "minuman" }); setShowModal(true) }}
+          onClick={() => { setEditCategory(null); setForm({ name: "" }); setShowModal(true) }}
           className="flex items-center gap-2 px-4 py-2.5 bg-terracotta text-white rounded-xl hover:bg-terracotta-light transition-colors"
         >
           <PlusIcon className="w-5 h-5" />
@@ -106,58 +102,30 @@ export default function CategoriesPage() {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white rounded-2xl p-6 shadow-sm border border-cream-dark">
-          <h2 className="text-lg font-serif font-semibold text-brown mb-4 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-terracotta" />
-            Makanan
-          </h2>
-          <div className="space-y-2">
-            {makanan.length === 0 && <p className="text-brown-light text-sm">Belum ada kategori</p>}
-            {makanan.map((cat) => (
-              <div key={cat.id} className="flex items-center justify-between px-4 py-3 rounded-xl bg-cream/50 hover:bg-cream transition-colors">
-                <div>
-                  <span className="font-medium text-brown">{cat.name}</span>
-                  <span className="ml-2 text-xs text-brown-light">({cat._count?.products ?? 0} produk)</span>
-                </div>
-                <div className="flex gap-1">
-                  <button onClick={() => openEdit(cat)} className="p-1.5 rounded-lg hover:bg-cream-dark text-brown-light hover:text-brown transition-colors">
-                    <PencilIcon className="w-4 h-4" />
-                  </button>
-                  <button onClick={() => handleDelete(cat.id)} className="p-1.5 rounded-lg hover:bg-red-50 text-brown-light hover:text-red-600 transition-colors">
-                    <TrashIcon className="w-4 h-4" />
-                  </button>
-                </div>
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-cream-dark">
+        <h2 className="text-lg font-serif font-semibold text-brown mb-4 flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-terracotta" />
+          Semua Kategori
+        </h2>
+        <div className="space-y-2">
+          {categories.length === 0 && <p className="text-brown-light text-sm">Belum ada kategori</p>}
+          {categories.map((cat) => (
+            <div key={cat.id} className="flex items-center justify-between px-4 py-3 rounded-xl bg-cream/50 hover:bg-cream transition-colors">
+              <div>
+                <span className="font-medium text-brown">{cat.name}</span>
+                <span className="ml-2 text-xs text-brown-light">({cat._count?.products ?? 0} produk)</span>
               </div>
-            ))}
-          </div>
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="bg-white rounded-2xl p-6 shadow-sm border border-cream-dark">
-          <h2 className="text-lg font-serif font-semibold text-brown mb-4 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-gold" />
-            Minuman
-          </h2>
-          <div className="space-y-2">
-            {minuman.length === 0 && <p className="text-brown-light text-sm">Belum ada kategori</p>}
-            {minuman.map((cat) => (
-              <div key={cat.id} className="flex items-center justify-between px-4 py-3 rounded-xl bg-cream/50 hover:bg-cream transition-colors">
-                <div>
-                  <span className="font-medium text-brown">{cat.name}</span>
-                  <span className="ml-2 text-xs text-brown-light">({cat._count?.products ?? 0} produk)</span>
-                </div>
-                <div className="flex gap-1">
-                  <button onClick={() => openEdit(cat)} className="p-1.5 rounded-lg hover:bg-cream-dark text-brown-light hover:text-brown transition-colors">
-                    <PencilIcon className="w-4 h-4" />
-                  </button>
-                  <button onClick={() => handleDelete(cat.id)} className="p-1.5 rounded-lg hover:bg-red-50 text-brown-light hover:text-red-600 transition-colors">
-                    <TrashIcon className="w-4 h-4" />
-                  </button>
-                </div>
+              <div className="flex gap-1">
+                <button onClick={() => openEdit(cat)} className="p-1.5 rounded-lg hover:bg-cream-dark text-brown-light hover:text-brown transition-colors">
+                  <PencilIcon className="w-4 h-4" />
+                </button>
+                <button onClick={() => handleDelete(cat.id)} className="p-1.5 rounded-lg hover:bg-red-50 text-brown-light hover:text-red-600 transition-colors">
+                  <TrashIcon className="w-4 h-4" />
+                </button>
               </div>
-            ))}
-          </div>
-        </motion.div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {showModal && (
@@ -181,17 +149,6 @@ export default function CategoriesPage() {
                   className="w-full px-4 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta"
                   required
                 />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-brown mb-1">Tipe</label>
-                <select
-                  value={form.type}
-                  onChange={(e) => setForm({ ...form, type: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta"
-                >
-                  <option value="minuman">Minuman</option>
-                  <option value="makanan">Makanan</option>
-                </select>
               </div>
               <div className="flex gap-3 pt-2">
                 <button

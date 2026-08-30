@@ -13,7 +13,7 @@ export async function PUT(
 
     const { id } = await context.params
     const body = await request.json()
-    const { name, type } = body
+    const { name } = body
 
     const existing = await prisma.category.findUnique({ where: { id } })
     if (!existing) {
@@ -24,7 +24,6 @@ export async function PUT(
       where: { id },
       data: {
         ...(name !== undefined && { name }),
-        ...(type !== undefined && { type }),
       },
     })
 

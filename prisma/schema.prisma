@@ -45,7 +45,6 @@ model User {
 model Category {
   id        String    @id @default(cuid())
   name      String
-  type      String
   createdBy String    @map("created_by")
   createdAt DateTime @default(now()) @map("created_at")
   products  Product[]
@@ -122,6 +121,11 @@ enum OrderPaymentMethod {
   qris
 }
 
+enum OrderDeliveryMethod {
+  pickup
+  delivery
+}
+
 enum OrderStatus {
   pending
   confirmed
@@ -129,15 +133,15 @@ enum OrderStatus {
 }
 
 model Order {
-  id             String              @id @default(cuid())
-  customerName   String              @map("customer_name")
-  tableNumber    Int?                @map("table_number")
-  notes          String?
-  status         OrderStatus         @default(pending)
-  paymentMethod  OrderPaymentMethod  @default(counter) @map("payment_method")
-  createdAt      DateTime            @default(now()) @map("created_at")
-  items          OrderItem[]
-
+  id              String              @id @default(cuid())
+  customerName    String              @map("customer_name")
+  notes           String?
+  status          OrderStatus         @default(pending)
+  paymentMethod   OrderPaymentMethod  @default(counter) @map("payment_method")
+  deliveryMethod  OrderDeliveryMethod @default(pickup) @map("delivery_method")
+  deliveryAddress String?             @map("delivery_address")
+  createdAt       DateTime            @default(now()) @map("created_at")
+  items           OrderItem[]
   @@map("orders")
 }
 

@@ -15,7 +15,6 @@ import { formatCurrency, getStockStatus } from "@/lib/utils"
 interface Category {
   id: string
   name: string
-  type: string
 }
 
 interface Product {
@@ -68,11 +67,14 @@ const itemAnim = {
   show: { opacity: 1, y: 0 },
 }
 
-const categoryColors: Record<string, string> = {
-  makanan: "from-terracotta to-terracotta-light",
-  minuman: "from-gold to-amber-400",
-  default: "from-brown-light to-brown",
-}
+const categoryGradients = [
+  "from-terracotta to-terracotta-light",
+  "from-gold to-amber-400",
+  "from-brown-light to-brown",
+  "from-emerald-500 to-teal-500",
+  "from-sky-500 to-indigo-500",
+  "from-fuchsia-500 to-pink-500",
+]
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([])
@@ -195,8 +197,10 @@ export default function ProductsPage() {
   }
 
   function getGradient(product: Product) {
-    const key = product.category?.type || "default"
-    return categoryColors[key] || categoryColors.default
+    const cat = product.category
+    if (!cat) return categoryGradients[categoryGradients.length - 1]
+    const hash = [...cat.id].reduce((a, c) => a + c.charCodeAt(0), 0)
+    return categoryGradients[hash % categoryGradients.length]
   }
 
   return (

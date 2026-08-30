@@ -14,9 +14,9 @@ export default function DashboardLayout({
 
   return (
     <SessionProvider>
-      <div className="flex min-h-screen">
+      <div className="flex h-screen overflow-hidden">
         <Sidebar />
-        <main className="flex-1 bg-off-white overflow-auto">
+        <main className="flex-1 bg-off-white overflow-y-auto">
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}

@@ -1,5 +1,36 @@
 import { prisma } from "@/lib/prisma"
 
+async function notifyTelegram(order: any) {
+  const token = process.env.TELEGRAM_BOT_TOKEN
+  const chatId = process.env.TELEGRAM_CHAT_ID
+  if (!token || !chatId) return
+
+  const idShort = order.id.slice(0, 6).toUpperCase()
+  const total = order.items.reduce((s: number, i: any) => s + Number(i.subtotal), 0)
+  const itemsText = order.items.map((i: any) => `• ${i.product.name} x${i.qty} — Rp ${Number(i.subtotal).toLocaleString("id-ID")}`).join("\n")
+  const caraTerima = order.deliveryMethod === "delivery" ? `Antar ke:\n${order.deliveryAddress || "-"}` : "Ambil di warung"
+  const bayar = order.paymentMethod === "qris" ? "QRIS (lunas)" : "Bayar di warung (counter)"
+  const catatan = order.notes ? `\nCatatan: ${order.notes}` : ""
+
+  const text =
+    `🔔 Pesanan Baru #${idShort}\n` +
+    `Nama: ${order.customerName}\n` +
+    `Bayar: ${bayar}\n` +
+    `Terima: ${caraTerima}${catatan}\n\n` +
+    `${itemsText}\n\n` +
+    `Total: Rp ${total.toLocaleString("id-ID")}`
+
+  try {
+    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: chatId, text }),
+    })
+  } catch (err) {
+    console.error("Telegram notify error:", err)
+  }
+}
+
 export async function GET() {
   try {
     const orders = await prisma.order.findMany({
@@ -78,6 +109,8 @@ export async function POST(request: Request) {
         return created
       })
 
+      // fire-and-forget, jangan blokir response jika Telegram gagal
+      notifyTelegram(order).catch((e) => console.error("Telegram notify error:", e))
       return Response.json(order, { status: 201 })
     }
 
@@ -104,6 +137,7 @@ export async function POST(request: Request) {
       return created
     })
 
+    notifyTelegram(order).catch((e) => console.error("Telegram notify error:", e))
     return Response.json(order, { status: 201 })
   } catch (e) {
     const message = e instanceof Error ? e.message : "Unknown error"

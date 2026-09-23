@@ -56,7 +56,7 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
 
 function CardHeader({ icon: Icon, title, subtitle }: { icon: React.ComponentType<{ className?: string }>; title: string; subtitle?: string }) {
   return (
-    <div className="flex items-start gap-3 px-6 pt-6 pb-4 border-b border-cream-dark/50">
+    <div className="flex items-start gap-3 px-4 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-cream-dark/50">
       <div className="w-10 h-10 rounded-xl bg-brown/10 flex items-center justify-center shrink-0">
         <Icon className="w-5 h-5 text-brown" />
       </div>
@@ -87,7 +87,7 @@ function Input({ id, type = "text", value, onChange, placeholder, step }: {
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       step={step}
-      className="w-full px-4 py-2.5 rounded-xl border border-cream-dark bg-white text-charcoal placeholder:text-brown-light/40 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all text-sm"
+      className="w-full px-4 py-2.5 rounded-xl border border-cream-dark bg-white text-charcoal placeholder:text-brown-light/40 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all text-base sm:text-sm"
     />
   )
 }
@@ -135,15 +135,15 @@ function Modal({ open, onClose, title, children }: {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 10 }}
         transition={{ duration: 0.15 }}
-        className="relative bg-cream rounded-2xl shadow-xl border border-cream-dark w-full max-w-md mx-4 overflow-hidden"
+        className="relative bg-cream rounded-2xl shadow-xl border border-cream-dark w-full max-w-md mx-4 max-h-[90dvh] overflow-y-auto"
       >
-        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-cream-dark/50">
+        <div className="flex items-center justify-between px-4 sm:px-6 pt-5 sm:pt-6 pb-4 border-b border-cream-dark/50">
           <h3 className="text-lg font-semibold text-brown">{title}</h3>
           <button onClick={onClose} className="p-1 rounded-lg hover:bg-cream-dark/50 transition-colors">
             <XMarkIcon className="w-5 h-5 text-brown-light" />
           </button>
         </div>
-        <div className="p-6">{children}</div>
+        <div className="p-4 sm:p-6">{children}</div>
       </motion.div>
     </div>
   )
@@ -434,15 +434,15 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-brown">Pengaturan</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-brown">Pengaturan</h1>
           <p className="text-sm text-brown-light/70 mt-1">Kelola pengaturan kafe, pembayaran, kategori, dan akun</p>
         </div>
         <button
           onClick={handleResetDefault}
           disabled={savingSettings}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-terracotta hover:text-terracotta-light border border-terracotta/30 hover:border-terracotta/60 rounded-xl transition-all disabled:opacity-50"
+          className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-terracotta hover:text-terracotta-light border border-terracotta/30 hover:border-terracotta/60 rounded-xl transition-all disabled:opacity-50 shrink-0"
         >
           <ArrowPathIcon className="w-4 h-4" />
           Reset Default
@@ -452,7 +452,7 @@ export default function SettingsPage() {
       {/* Profil Kafe */}
       <Card>
         <CardHeader icon={Cog6ToothIcon} title="Profil Kafe" subtitle="Informasi dasar kafe Anda" />
-        <div className="p-6 space-y-4">
+        <div className="p-4 sm:p-6 space-y-4">
           <div>
             <Label htmlFor="cafeName">Nama Kafe</Label>
             <Input id="cafeName" value={formName} onChange={setFormName} placeholder="Forever Caffe" />
@@ -486,9 +486,9 @@ export default function SettingsPage() {
       {/* Pembayaran QRIS */}
       <Card>
         <CardHeader icon={CreditCardIcon} title="Pembayaran QRIS" subtitle="Atur gambar QRIS untuk pembayaran" />
-        <div className="p-6 space-y-4">
+        <div className="p-4 sm:p-6 space-y-4">
           {settings.qrisImageUrl && (
-            <div className="flex items-start gap-4 p-4 bg-white rounded-xl border border-cream-dark/50">
+            <div className="flex flex-col min-[420px]:flex-row items-start gap-4 p-4 bg-white rounded-xl border border-cream-dark/50">
               <img
                 src={settings.qrisImageUrl}
                 alt="QRIS"
@@ -526,7 +526,7 @@ export default function SettingsPage() {
       {/* Kategori Produk */}
       <Card>
         <CardHeader icon={TagIcon} title="Kategori Produk" subtitle="Kelola kategori produk" />
-        <div className="p-6 space-y-4">
+        <div className="p-4 sm:p-6 space-y-4">
           {categories.length > 0 ? (
             <div className="space-y-2">
               {categories.map((cat) => (
@@ -554,14 +554,14 @@ export default function SettingsPage() {
 
           <div className="border-t border-cream-dark/50 pt-4">
             <h4 className="text-sm font-medium text-brown mb-3">Tambah Kategori</h4>
-            <div className="flex items-end gap-3">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-3">
               <div className="flex-1">
                 <Label>Nama</Label>
                 <input
                   value={newCatName}
                   onChange={(e) => setNewCatName(e.target.value)}
                   placeholder="Nama kategori"
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream-dark bg-white text-charcoal placeholder:text-brown-light/40 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all text-sm"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream-dark bg-white text-charcoal placeholder:text-brown-light/40 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold transition-all text-base sm:text-sm"
                 />
               </div>
               <button
@@ -579,7 +579,7 @@ export default function SettingsPage() {
       {/* Akun Pengguna */}
       <Card>
         <CardHeader icon={UserGroupIcon} title="Akun Pengguna" subtitle="Kelola kasir dan pemilik" />
-        <div className="p-6 space-y-4">
+        <div className="p-4 sm:p-6 space-y-4">
           {users.length > 0 ? (
             <div className="space-y-2">
               {users.map((user) => (

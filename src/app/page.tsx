@@ -65,14 +65,14 @@ export default async function LandingPage() {
   return (
     <div className="min-h-screen bg-off-white">
       <header className="fixed top-0 left-0 right-0 z-50 bg-off-white/90 backdrop-blur-md border-b border-cream-dark">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-terracotta flex items-center justify-center">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-3">
+          <Link href="/" className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 rounded-xl bg-terracotta flex items-center justify-center shrink-0">
               <BuildingStorefrontIcon className="w-5 h-5 text-white" />
             </div>
-            <span className="font-serif font-semibold text-brown text-lg">WarungGo</span>
+            <span className="font-serif font-semibold text-brown text-lg truncate">WarungGo</span>
           </Link>
-          <nav className="flex items-center gap-6">
+          <nav className="flex items-center gap-2 sm:gap-6 shrink-0">
             <a href="#sembako" className="text-sm text-brown-light hover:text-brown transition-colors hidden sm:block">
               Sembako
             </a>
@@ -81,7 +81,7 @@ export default async function LandingPage() {
             </a>
             <Link
               href="/login"
-              className="px-5 py-2 rounded-xl bg-terracotta text-white text-sm font-semibold hover:bg-terracotta-light transition-colors shadow-sm"
+              className="px-4 sm:px-5 py-2 rounded-xl bg-terracotta text-white text-sm font-semibold hover:bg-terracotta-light transition-colors shadow-sm whitespace-nowrap"
             >
               Kelola Warung
             </Link>
@@ -93,16 +93,16 @@ export default async function LandingPage() {
       </header>
 
       <main>
-        <section className="relative pt-24 overflow-hidden">
+        <section className="relative pt-20 sm:pt-24 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-cream via-off-white to-success/5" />
-          <div className="relative max-w-6xl mx-auto px-6 py-16 md:py-24">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-success/10 border border-success/20 text-success text-sm mb-6">
-                  <span className="w-2 h-2 rounded-full bg-success" />
+          <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16 md:py-24">
+            <div className="grid md:grid-cols-2 gap-10 md:gap-12 items-center">
+              <div className="min-w-0">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-success/10 border border-success/20 text-success text-xs sm:text-sm mb-6">
+                  <span className="w-2 h-2 rounded-full bg-success shrink-0" />
                   Etalase digital warung sembako
                 </div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-brown leading-[1.1]">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-brown leading-[1.1]">
                   Warung di ujung jalan,
                   <br />
                   kini di{" "}
@@ -118,29 +118,29 @@ export default async function LandingPage() {
                   lihat dan pesan beras, minyak, telur, dan kebutuhan harian dari HP&mdash;tanpa
                   ubah cara jualanmu.
                 </p>
-                <div className="flex flex-wrap items-center gap-3 mt-8">
-                  <Link href="/order" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-terracotta text-white font-semibold hover:bg-terracotta-light transition-colors shadow-lg shadow-terracotta/20">
+                <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 mt-8">
+                  <Link href="/order" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-terracotta text-white font-semibold hover:bg-terracotta-light transition-colors shadow-lg shadow-terracotta/20">
                     Pesan Sekarang
                     <ArrowRightIcon className="w-4 h-4" />
                   </Link>
-                  <Link href="#sembako" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-cream-dark text-brown font-semibold hover:bg-cream transition-colors">
+                  <Link href="#sembako" className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-cream-dark text-brown font-semibold hover:bg-cream transition-colors">
                     Lihat Sembako
                   </Link>
-                  <Link href="/login" className="text-sm text-brown-light hover:text-brown underline-offset-4 hover:underline">
+                  <Link href="/login" className="text-sm text-center sm:text-left text-brown-light hover:text-brown underline-offset-4 hover:underline">
                     Kelola Warung
                   </Link>
                 </div>
-                <div className="flex items-center gap-5 mt-7 text-xs text-brown-light">
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-7 text-xs text-brown-light">
                   <span className="inline-flex items-center gap-1.5"><SparklesIcon className="w-4 h-4 text-success" /> Tanpa biaya buka etalase</span>
                   <span className="inline-flex items-center gap-1.5"><SparklesIcon className="w-4 h-4 text-success" /> Stok otomatis</span>
                 </div>
               </div>
 
-              <div className="relative hidden md:block">
-                <div className="absolute -top-6 -right-6 w-40 h-40 rounded-3xl bg-terracotta/10 -z-0" />
-                <div className="absolute -bottom-6 -left-6 w-32 h-32 rounded-3xl bg-success/10 -z-0" />
+              <div className="relative mt-2 md:mt-0">
+                <div className="absolute -top-6 -right-6 w-40 h-40 rounded-3xl bg-terracotta/10 -z-0 hidden sm:block" />
+                <div className="absolute -bottom-6 -left-6 w-32 h-32 rounded-3xl bg-success/10 -z-0 hidden sm:block" />
 
-                <div className="relative bg-white rounded-3xl border border-cream-dark shadow-xl shadow-brown/5 p-5 max-w-sm ml-auto mr-auto">
+                <div className="relative bg-white rounded-3xl border border-cream-dark shadow-xl shadow-brown/5 p-4 sm:p-5 max-w-sm w-full mx-auto">
                   <div className="flex items-center justify-between mb-1">
                     <div className="flex items-center gap-2.5">
                       <div className="w-10 h-10 rounded-xl bg-terracotta/15 flex items-center justify-center">
@@ -205,26 +205,26 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        <section id="cara-pesan" className="py-20 px-6 bg-off-white scroll-mt-16">
+        <section id="cara-pesan" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-off-white scroll-mt-16">
           <div className="max-w-6xl mx-auto">
-            <div className="max-w-2xl mb-12">
+            <div className="max-w-2xl mb-8 sm:mb-12">
               <p className="text-sm font-semibold text-terracotta uppercase tracking-wide">Satu warung, dua yang terbantu</p>
-              <h2 className="text-3xl md:text-4xl font-serif font-bold text-brown mt-2">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-brown mt-2">
                 Warung tetap warung, cuma jadi lebih mudah.
               </h2>
-              <p className="text-brown-light mt-3 leading-relaxed">
+              <p className="text-sm sm:text-base text-brown-light mt-3 leading-relaxed">
                 WarungGo bukan toko baru. Kita cuma kasih warung sembako seperti punya etalase
                 online sendiri&mdash;pelanggan pesan dari HP, pemilik kelola dari dashboard.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="rounded-3xl border border-success/20 bg-success/5 p-7 md:p-8">
+            <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
+              <div className="rounded-3xl border border-success/20 bg-success/5 p-5 sm:p-7 md:p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-11 h-11 rounded-2xl bg-success/15 flex items-center justify-center">
+                  <div className="w-11 h-11 rounded-2xl bg-success/15 flex items-center justify-center shrink-0">
                     <ShoppingBagIcon className="w-6 h-6 text-success" />
                   </div>
-                  <h3 className="font-serif font-semibold text-brown text-xl">Buat Pelanggan Kami</h3>
+                  <h3 className="font-serif font-semibold text-brown text-lg sm:text-xl">Buat Pelanggan Kami</h3>
                 </div>
                 <ol className="space-y-5">
                   {[
@@ -243,12 +243,12 @@ export default async function LandingPage() {
                 </ol>
               </div>
 
-              <div className="rounded-3xl border border-terracotta/20 bg-terracotta/5 p-7 md:p-8">
+              <div className="rounded-3xl border border-terracotta/20 bg-terracotta/5 p-5 sm:p-7 md:p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-11 h-11 rounded-2xl bg-terracotta/15 flex items-center justify-center">
+                  <div className="w-11 h-11 rounded-2xl bg-terracotta/15 flex items-center justify-center shrink-0">
                     <BuildingStorefrontIcon className="w-6 h-6 text-terracotta" />
                   </div>
-                  <h3 className="font-serif font-semibold text-brown text-xl">Buat Pemilik Warung</h3>
+                  <h3 className="font-serif font-semibold text-brown text-lg sm:text-xl">Buat Pemilik Warung</h3>
                 </div>
                 <ol className="space-y-5">
                   {[
@@ -272,11 +272,11 @@ export default async function LandingPage() {
 
         <MenuSection products={featured} categories={categories} />
 
-        <section id="info" className="py-20 px-6 bg-cream/50 scroll-mt-16">
+        <section id="info" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-cream/50 scroll-mt-16">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl font-serif font-bold text-brown text-center mb-3">Kata Mereka</h2>
-            <p className="text-brown-light text-center mb-12 max-w-lg mx-auto">Dari balik etalase warung sampai ke dapur pelanggan.</p>
-            <div className="grid md:grid-cols-3 gap-6">
+            <h2 className="text-2xl sm:text-3xl font-serif font-bold text-brown text-center mb-3">Kata Mereka</h2>
+            <p className="text-sm sm:text-base text-brown-light text-center mb-8 sm:mb-12 max-w-lg mx-auto">Dari balik etalase warung sampai ke dapur pelanggan.</p>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
               {[
                 { name: "Bu Siti", role: "Pemilik Warung", text: "Dulu yang pesan cuma yang lewat depan. Sejak pakai WarungGo, langganan di komplek sebelah mulai nitip beras & minyak. Dagangan nggak numpuk.", rating: 5 },
                 { name: "Ibu Ani", role: "Pelanggan", text: "Malem-malem kehabisan beras, tinggal buka WarungGo—tinggal pesan, sepuluh menit sampai. Nggak perlu ke warung hujan-hujanan.", rating: 5 },
@@ -304,23 +304,23 @@ export default async function LandingPage() {
           </div>
         </section>
 
-        <section className="py-20 px-6 bg-brown relative overflow-hidden">
-          <div className="absolute inset-0 opacity-[0.04]">
-            <div className="absolute top-8 left-8 text-7xl">🛒</div>
-            <div className="absolute bottom-8 right-8 text-7xl">🏪</div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-8xl">📦</div>
+        <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-brown relative overflow-hidden">
+          <div className="absolute inset-0 opacity-[0.04] pointer-events-none" aria-hidden="true">
+            <div className="absolute top-8 left-8 text-5xl sm:text-7xl">🛒</div>
+            <div className="absolute bottom-8 right-8 text-5xl sm:text-7xl">🏪</div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-6xl sm:text-8xl">📦</div>
           </div>
           <div className="relative max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-cream mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-cream mb-4">
               Punya warung sembako?
             </h2>
-            <p className="text-cream-dark text-lg mb-8 max-w-xl mx-auto">
+            <p className="text-cream-dark text-base sm:text-lg mb-8 max-w-xl mx-auto">
               Bawa warungmu ke WarungGo. Gratis daftar, tanpa potongan mahal&mdash;pelanggan
               tinggal satunya klik untuk pesan.
             </p>
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-terracotta text-white font-semibold hover:bg-terracotta-light transition-colors shadow-lg shadow-black/10"
+              className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3.5 rounded-xl bg-terracotta text-white font-semibold hover:bg-terracotta-light transition-colors shadow-lg shadow-black/10"
             >
               Kelola Warung Sekarang
               <ArrowRightIcon className="w-4 h-4" />
@@ -329,16 +329,16 @@ export default async function LandingPage() {
         </section>
       </main>
 
-      <footer className="bg-charcoal py-10 px-6">
+      <footer className="bg-charcoal py-10 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-terracotta flex items-center justify-center">
                 <BuildingStorefrontIcon className="w-4 h-4 text-white" />
               </div>
               <span className="font-serif font-semibold text-cream">WarungGo</span>
             </div>
-            <div className="flex items-center gap-6 text-sm text-cream-dark">
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-cream-dark">
               <a href="#sembako" className="hover:text-cream transition-colors">Sembako</a>
               <a href="#cara-pesan" className="hover:text-cream transition-colors">Cara Pesan</a>
               <Link href="/login" className="hover:text-cream transition-colors">Kelola Warung</Link>

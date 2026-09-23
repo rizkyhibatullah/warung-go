@@ -14,9 +14,9 @@ export default function DashboardLayout({
 
   return (
     <SessionProvider>
-      <div className="flex h-screen overflow-hidden">
+      <div className="flex flex-col md:flex-row min-h-dvh md:h-screen md:overflow-hidden">
         <Sidebar />
-        <main className="flex-1 bg-off-white overflow-y-auto">
+        <main className="flex-1 min-w-0 bg-off-white overflow-y-auto">
           <AnimatePresence mode="wait">
             <motion.div
               key={pathname}
@@ -24,7 +24,7 @@ export default function DashboardLayout({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2 }}
-              className="p-6"
+              className="p-4 sm:p-6 pb-10 md:pb-6"
             >
               {children}
             </motion.div>

@@ -1,6 +1,12 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import "./globals.css"
 import { Toaster } from "react-hot-toast"
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#4A3728",
+}
 
 export const metadata: Metadata = {
   title: "WarungGo - Warung sembako tetangga, kini di ujung jari",

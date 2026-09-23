@@ -124,10 +124,10 @@ function DetailModal({
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 20 }}
         transition={{ duration: 0.2 }}
-        className="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[85vh] overflow-y-auto"
+        className="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[85dvh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 bg-white z-10 flex items-center justify-between p-5 border-b border-cream-dark/40">
+        <div className="sticky top-0 bg-white z-10 flex items-center justify-between gap-3 p-4 sm:p-5 border-b border-cream-dark/40">
           <h3 className="text-lg font-semibold font-serif text-charcoal">Detail Transaksi</h3>
           <button
             onClick={onClose}
@@ -137,7 +137,7 @@ function DetailModal({
           </button>
         </div>
 
-        <div className="p-5 space-y-4">
+        <div className="p-4 sm:p-5 space-y-4">
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <p className="text-charcoal/50">Invoice</p>
@@ -158,19 +158,19 @@ function DetailModal({
           </div>
 
           <div>
-            <div className="flex items-center justify-between text-sm text-charcoal/50 mb-2 pb-2 border-b border-cream-dark/40">
-              <span className="flex-1">Item</span>
-              <span className="w-16 text-center">Qty</span>
-              <span className="w-24 text-right">Harga</span>
-              <span className="w-24 text-right">Subtotal</span>
+            <div className="flex items-center justify-between gap-1 text-[11px] sm:text-sm text-charcoal/50 mb-2 pb-2 border-b border-cream-dark/40">
+              <span className="flex-1 min-w-0">Item</span>
+              <span className="w-10 sm:w-16 text-center shrink-0">Qty</span>
+              <span className="w-16 sm:w-24 text-right shrink-0">Harga</span>
+              <span className="w-20 sm:w-24 text-right shrink-0">Subtotal</span>
             </div>
             <div className="space-y-2">
               {transaction.items.map((item) => (
-                <div key={item.id} className="flex items-center justify-between text-sm">
-                  <span className="flex-1 font-medium text-charcoal">{item.product.name}</span>
-                  <span className="w-16 text-center text-charcoal/70">{item.qty}x</span>
-                  <span className="w-24 text-right text-charcoal/70">{formatCurrency(item.priceAtSale)}</span>
-                  <span className="w-24 text-right font-medium text-charcoal">{formatCurrency(item.subtotal)}</span>
+                <div key={item.id} className="flex items-center justify-between gap-1 text-xs sm:text-sm">
+                  <span className="flex-1 min-w-0 font-medium text-charcoal truncate">{item.product.name}</span>
+                  <span className="w-10 sm:w-16 text-center text-charcoal/70 shrink-0">{item.qty}x</span>
+                  <span className="w-16 sm:w-24 text-right text-charcoal/70 truncate shrink-0">{formatCurrency(item.priceAtSale)}</span>
+                  <span className="w-20 sm:w-24 text-right font-medium text-charcoal truncate shrink-0">{formatCurrency(item.subtotal)}</span>
                 </div>
               ))}
             </div>
@@ -273,16 +273,16 @@ export default function TransactionsPage() {
               placeholder="Cari invoice atau kasir..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 bg-cream/50 border border-cream-dark/60 rounded-xl text-sm text-charcoal placeholder:text-charcoal/40 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold/60 transition-all"
+              className="w-full pl-9 pr-4 py-2.5 bg-cream/50 border border-cream-dark/60 rounded-xl text-base sm:text-sm text-charcoal placeholder:text-charcoal/40 focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold/60 transition-all"
             />
           </div>
-          <div className="flex items-center gap-2">
-            <div className="flex bg-cream-dark/40 rounded-lg p-0.5">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="grid grid-cols-3 sm:flex flex-1 sm:flex-none bg-cream-dark/40 rounded-lg p-0.5">
               {paymentMethods.map((pm) => (
                 <button
                   key={pm.key}
                   onClick={() => setPaymentFilter(pm.key)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
+                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-center whitespace-nowrap ${
                     paymentFilter === pm.key
                       ? "bg-brown text-cream shadow-sm"
                       : "text-charcoal/60 hover:text-charcoal"

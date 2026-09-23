@@ -140,7 +140,7 @@ export default function PaymentModal({ subtotal, onClose, onSuccess }: PaymentMo
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 10 }}
           transition={{ duration: 0.2 }}
-          className="bg-white rounded-2xl w-full max-w-md overflow-hidden shadow-xl"
+          className="bg-white rounded-2xl w-full max-w-md max-h-[90dvh] overflow-y-auto shadow-xl"
         >
           {loading ? (
             <div className="p-12 text-center">

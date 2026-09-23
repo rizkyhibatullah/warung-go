@@ -82,15 +82,15 @@ export default function MenuSection({ products, categories }: MenuSectionProps) 
     filteredProducts !== null ? filteredProducts : fallbackItems
 
   return (
-    <section id="sembako" className="py-20 px-6 bg-cream scroll-mt-16">
+    <section id="sembako" className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-cream scroll-mt-16">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-brown">Sembako yang Sering Dicari</h2>
-          <p className="text-brown-light mt-2">Ambil dari warung terdekat, bukan dari toko yang jauh</p>
+        <div className="text-center mb-6 sm:mb-8">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif font-bold text-brown">Sembako yang Sering Dicari</h2>
+          <p className="text-sm sm:text-base text-brown-light mt-2">Ambil dari warung terdekat, bukan dari toko yang jauh</p>
         </div>
 
         {derivedCategories.length > 0 && (
-          <div className="flex gap-2 mb-10 overflow-x-auto pb-1 scrollbar-thin -mx-4 px-4 justify-center">
+          <div className="flex gap-2 mb-8 sm:mb-10 overflow-x-auto pb-2 scrollbar-thin -mx-4 px-4 sm:mx-0 sm:px-1 sm:justify-center sm:flex-wrap">
             <button
               onClick={() => setActiveCategory("all")}
               className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all flex-shrink-0 ${
@@ -142,9 +142,9 @@ export default function MenuSection({ products, categories }: MenuSectionProps) 
                       <span className="text-4xl">{item.emoji || "🛒"}</span>
                     )}
                   </div>
-                  <div className="p-4">
+                  <div className="p-3 sm:p-4">
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-serif font-semibold text-brown">{item.name}</h3>
+                      <h3 className="font-serif font-semibold text-brown text-sm sm:text-base leading-snug line-clamp-2">{item.name}</h3>
                       {item.unit && (
                         <span className="text-[10px] text-brown-light bg-cream rounded-full px-2 py-0.5 whitespace-nowrap shrink-0">
                           {item.unit}
@@ -152,26 +152,28 @@ export default function MenuSection({ products, categories }: MenuSectionProps) 
                       )}
                     </div>
                     {item.description && (
-                      <p className="text-brown-light text-xs mt-1 line-clamp-2">{item.description}</p>
+                      <p className="text-brown-light text-xs mt-1 line-clamp-2 hidden sm:block">{item.description}</p>
                     )}
-                    <div className="flex items-center justify-between mt-3">
-                      <span className="font-bold text-terracotta">{formatCurrency(item.price)}</span>
-                      {soldOut && (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700">Habis</span>
-                      )}
-                    </div>
+                    <div className="flex flex-col gap-2 mt-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-bold text-terracotta text-sm sm:text-base truncate">{formatCurrency(item.price)}</span>
+                        {soldOut && (
+                          <span className="text-[11px] px-2 py-0.5 rounded-full bg-red-100 text-red-700 shrink-0">Habis</span>
+                        )}
+                      </div>
                     {soldOut ? (
-                      <span className="mt-3 block w-full text-center py-2 rounded-xl bg-cream-dark text-brown-light text-sm font-semibold cursor-not-allowed">
+                      <span className="block w-full text-center py-2 rounded-xl bg-cream-dark text-brown-light text-sm font-semibold cursor-not-allowed">
                         Habis
                       </span>
                     ) : (
                       <Link
                         href="/order"
-                        className="mt-3 block w-full text-center py-2 rounded-xl bg-terracotta text-white text-sm font-semibold hover:bg-terracotta-light transition-colors"
+                        className="block w-full text-center py-2 rounded-xl bg-terracotta text-white text-sm font-semibold hover:bg-terracotta-light transition-colors"
                       >
                         Pesan
                       </Link>
                     )}
+                    </div>
                   </div>
                 </motion.div>
               )

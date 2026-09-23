@@ -33,14 +33,14 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-off-white p-4">
+    <div className="min-h-dvh flex items-center justify-center bg-off-white p-4 py-8">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-brown font-serif">Forever Caffe</h1>
-          <p className="text-brown-light mt-2">Point of Sale & Manajemen</p>
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-brown font-serif">Forever Caffe</h1>
+          <p className="text-sm sm:text-base text-brown-light mt-2">Point of Sale & Manajemen</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg p-8 border border-cream-dark">
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg p-5 sm:p-8 border border-cream-dark">
           <h2 className="text-xl font-semibold text-brown mb-6 text-center">Masuk ke Akun</h2>
 
           <div className="space-y-4">
@@ -50,7 +50,7 @@ export default function LoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-cream-dark bg-off-white text-charcoal text-base placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all"
                 placeholder="admin@forevercaffe.com"
                 required
               />
@@ -61,7 +61,7 @@ export default function LoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-cream-dark bg-off-white text-charcoal text-base placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all"
                 placeholder="••••••••"
                 required
               />

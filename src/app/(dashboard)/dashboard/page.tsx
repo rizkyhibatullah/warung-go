@@ -62,14 +62,14 @@ function StatCard({
   return (
     <motion.div
       variants={itemVariants}
-      className="bg-white rounded-2xl p-5 shadow-sm border border-cream-dark/40 flex items-center gap-4"
+      className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-cream-dark/40 flex items-center gap-3 sm:gap-4 min-w-0"
     >
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${color}`}>
-        <Icon className="w-6 h-6" />
+      <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center shrink-0 ${color}`}>
+        <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
       </div>
-      <div>
-        <p className="text-sm text-charcoal/60 font-medium">{label}</p>
-        <p className="text-xl font-bold text-charcoal font-serif">{value}</p>
+      <div className="min-w-0">
+        <p className="text-xs sm:text-sm text-charcoal/60 font-medium truncate">{label}</p>
+        <p className="text-base sm:text-xl font-bold text-charcoal font-serif truncate">{value}</p>
       </div>
     </motion.div>
   )
@@ -154,9 +154,9 @@ export default function DashboardPage() {
       animate="visible"
       className="space-y-6"
     >
-      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <motion.div variants={itemVariants} className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-charcoal">Dashboard</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-charcoal">Dashboard</h1>
           <p className="text-sm text-charcoal/60">Rekap keuntungan dan performa bisnis</p>
         </div>
         <div className="flex items-center gap-2">
@@ -198,7 +198,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <motion.div variants={itemVariants} className="bg-white rounded-2xl p-5 shadow-sm border border-cream-dark/40">
+        <motion.div variants={itemVariants} className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-cream-dark/40 min-w-0">
           <h2 className="text-lg font-semibold text-charcoal font-serif mb-4">Pendapatan 7 Hari</h2>
           <ResponsiveContainer width="100%" height={260}>
             <LineChart data={dailyChartData ?? []}>
@@ -211,7 +211,7 @@ export default function DashboardPage() {
           </ResponsiveContainer>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="bg-white rounded-2xl p-5 shadow-sm border border-cream-dark/40">
+        <motion.div variants={itemVariants} className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-cream-dark/40 min-w-0">
           <h2 className="text-lg font-semibold text-charcoal font-serif mb-4">Pendapatan Bulanan</h2>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={monthlyChartData ?? []}>
@@ -226,7 +226,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <motion.div variants={itemVariants} className="bg-white rounded-2xl p-5 shadow-sm border border-cream-dark/40">
+        <motion.div variants={itemVariants} className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-cream-dark/40 min-w-0">
           <div className="flex items-center gap-2 mb-4">
             <FireIcon className="w-5 h-5 text-terracotta" />
             <h2 className="text-lg font-semibold text-charcoal font-serif">Produk Terlaris</h2>
@@ -255,7 +255,7 @@ export default function DashboardPage() {
           )}
         </motion.div>
 
-        <motion.div variants={itemVariants} className="bg-white rounded-2xl p-5 shadow-sm border border-cream-dark/40">
+        <motion.div variants={itemVariants} className="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-cream-dark/40 min-w-0">
           <div className="flex items-center gap-2 mb-4">
             <ExclamationTriangleIcon className="w-5 h-5 text-warning" />
             <h2 className="text-lg font-semibold text-charcoal font-serif">Stok Menipis</h2>

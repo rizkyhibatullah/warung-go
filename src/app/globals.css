@@ -38,6 +38,12 @@ html {
   scroll-behavior: smooth;
 }
 
+html,
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
 * {
   box-sizing: border-box;
 }

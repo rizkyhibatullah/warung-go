@@ -88,21 +88,21 @@ export default function CategoriesPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:justify-between mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-serif font-bold text-brown">Kategori</h1>
-          <p className="text-brown-light mt-1">Kelola kategori produk</p>
+          <h1 className="text-2xl sm:text-3xl font-serif font-bold text-brown">Kategori</h1>
+          <p className="text-sm text-brown-light mt-1">Kelola kategori produk</p>
         </div>
         <button
           onClick={() => { setEditCategory(null); setForm({ name: "" }); setShowModal(true) }}
-          className="flex items-center gap-2 px-4 py-2.5 bg-terracotta text-white rounded-xl hover:bg-terracotta-light transition-colors"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 bg-terracotta text-white text-sm rounded-xl hover:bg-terracotta-light transition-colors shrink-0"
         >
           <PlusIcon className="w-5 h-5" />
           Tambah Kategori
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-cream-dark">
+      <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-cream-dark">
         <h2 className="text-lg font-serif font-semibold text-brown mb-4 flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-terracotta" />
           Semua Kategori
@@ -110,12 +110,12 @@ export default function CategoriesPage() {
         <div className="space-y-2">
           {categories.length === 0 && <p className="text-brown-light text-sm">Belum ada kategori</p>}
           {categories.map((cat) => (
-            <div key={cat.id} className="flex items-center justify-between px-4 py-3 rounded-xl bg-cream/50 hover:bg-cream transition-colors">
-              <div>
-                <span className="font-medium text-brown">{cat.name}</span>
-                <span className="ml-2 text-xs text-brown-light">({cat._count?.products ?? 0} produk)</span>
+            <div key={cat.id} className="flex items-center justify-between gap-2 px-3 sm:px-4 py-3 rounded-xl bg-cream/50 hover:bg-cream transition-colors">
+              <div className="min-w-0">
+                <span className="font-medium text-brown text-sm sm:text-base truncate">{cat.name}</span>
+                <span className="ml-2 text-xs text-brown-light whitespace-nowrap">({cat._count?.products ?? 0} produk)</span>
               </div>
-              <div className="flex gap-1">
+              <div className="flex gap-1 shrink-0">
                 <button onClick={() => openEdit(cat)} className="p-1.5 rounded-lg hover:bg-cream-dark text-brown-light hover:text-brown transition-colors">
                   <PencilIcon className="w-4 h-4" />
                 </button>
@@ -146,7 +146,7 @@ export default function CategoriesPage() {
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta"
+                  className="w-full px-4 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal text-base focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta"
                   required
                 />
               </div>

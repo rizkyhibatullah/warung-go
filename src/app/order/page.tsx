@@ -241,9 +241,9 @@ export default function OrderPage() {
       </header>
 
       <main className="max-w-6xl mx-auto px-4 pt-6 pb-32 md:pb-8">
-        <div className="mb-8">
-          <h1 className="font-serif text-3xl md:text-4xl font-bold text-brown">Pesan Sekarang</h1>
-          <p className="text-brown-light mt-1">Pilih sembako untuk diambil di warung atau diantar</p>
+        <div className="mb-6 sm:mb-8">
+          <h1 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-brown">Pesan Sekarang</h1>
+          <p className="text-sm sm:text-base text-brown-light mt-1">Pilih sembako untuk diambil di warung atau diantar</p>
         </div>
 
         <div className="flex gap-2 mb-6 overflow-x-auto pb-1 scrollbar-thin -mx-4 px-4">
@@ -273,7 +273,7 @@ export default function OrderPage() {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="bg-white rounded-2xl overflow-hidden border border-cream-dark animate-pulse">
                 <div className="aspect-[4/3] bg-cream-dark" />
@@ -290,7 +290,7 @@ export default function OrderPage() {
             <p className="text-sm">Tidak ada produk di kategori ini</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
             <AnimatePresence mode="popLayout">
               {filteredProducts.map((product) => (
                 <motion.div
@@ -324,17 +324,17 @@ export default function OrderPage() {
                       </div>
                     )}
                   </div>
-                  <div className="p-4">
-                    <h3 className="font-serif font-semibold text-brown text-sm md:text-base">{product.name}</h3>
+                  <div className="p-3 sm:p-4">
+                    <h3 className="font-serif font-semibold text-brown text-sm md:text-base line-clamp-2 leading-snug min-h-[2.5em]">{product.name}</h3>
                     {product.description && (
-                      <p className="text-brown-light text-xs mt-1 line-clamp-1">{product.description}</p>
+                      <p className="text-brown-light text-xs mt-1 line-clamp-1 hidden sm:block">{product.description}</p>
                     )}
-                    <div className="flex items-center justify-between mt-3">
-                      <span className="font-bold text-terracotta text-sm md:text-base">{formatCurrency(product.price)}</span>
+                    <div className="flex flex-col gap-2 mt-3">
+                      <span className="font-bold text-terracotta text-sm md:text-base truncate">{formatCurrency(product.price)}</span>
                       <button
                         onClick={(e) => { e.stopPropagation(); handleAddToCart(product) }}
                         disabled={product.stockQty <= 0}
-                        className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-terracotta text-white text-xs font-medium hover:bg-terracotta-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="flex items-center justify-center gap-1 px-3 py-2 sm:py-1.5 rounded-lg bg-terracotta text-white text-xs font-medium hover:bg-terracotta-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <PlusIcon className="w-3.5 h-3.5" />
                         Tambah
@@ -354,7 +354,7 @@ export default function OrderPage() {
             initial={{ y: 100 }}
             animate={{ y: 0 }}
             exit={{ y: 100 }}
-            className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-cream-dark md:hidden z-20 shadow-lg"
+            className="fixed bottom-0 left-0 right-0 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] bg-white border-t border-cream-dark md:hidden z-20 shadow-lg"
           >
             <button
               onClick={() => setCartOpen(true)}
@@ -385,7 +385,7 @@ export default function OrderPage() {
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className={`fixed z-50 bg-white shadow-2xl flex flex-col ${
                 isMobile
-                  ? "bottom-0 left-0 right-0 rounded-t-3xl max-h-[85vh]"
+                  ? "bottom-0 left-0 right-0 rounded-t-3xl max-h-[85dvh]"
                   : "right-0 top-0 bottom-0 w-full max-w-md rounded-l-2xl"
               }`}
             >
@@ -475,7 +475,7 @@ export default function OrderPage() {
                         value={customerName}
                         onChange={(e) => setCustomerName(e.target.value)}
                         placeholder="Masukkan nama"
-                        className="w-full px-3 py-2 rounded-xl border border-cream-dark bg-white text-sm placeholder:text-brown-light/30 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-shadow"
+                        className="w-full px-3 py-2 rounded-xl border border-cream-dark bg-white text-base sm:text-sm placeholder:text-brown-light/30 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-shadow"
                       />
                     </div>
 
@@ -488,7 +488,7 @@ export default function OrderPage() {
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         placeholder="08xxxxxxxxxx"
-                        className="w-full px-3 py-2 rounded-xl border border-cream-dark bg-white text-sm placeholder:text-brown-light/30 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-shadow"
+                        className="w-full px-3 py-2 rounded-xl border border-cream-dark bg-white text-base sm:text-sm placeholder:text-brown-light/30 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-shadow"
                       />
                     </div>
 
@@ -532,7 +532,7 @@ export default function OrderPage() {
                           onChange={(e) => setAddress(e.target.value)}
                           placeholder="Nama jalan, nomor rumah, RT/RW, patokan"
                           rows={2}
-                          className="w-full px-3 py-2 rounded-xl border border-cream-dark bg-white text-sm placeholder:text-brown-light/30 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-shadow resize-none"
+                          className="w-full px-3 py-2 rounded-xl border border-cream-dark bg-white text-base sm:text-sm placeholder:text-brown-light/30 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-shadow resize-none"
                         />
                       </div>
                     )}
@@ -576,7 +576,7 @@ export default function OrderPage() {
                         onChange={(e) => setNotes(e.target.value)}
                         placeholder="Catatan pesanan (opsional)"
                         rows={2}
-                        className="w-full px-3 py-2 rounded-xl border border-cream-dark bg-white text-sm placeholder:text-brown-light/30 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-shadow resize-none"
+                        className="w-full px-3 py-2 rounded-xl border border-cream-dark bg-white text-base sm:text-sm placeholder:text-brown-light/30 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-shadow resize-none"
                       />
                     </div>
 
@@ -659,7 +659,7 @@ function SuccessState({ order, onNewOrder }: { order: Order; onNewOrder: () => v
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.4, ease: "easeOut" }}
-        className="w-full max-w-lg bg-white rounded-3xl border border-cream-dark p-8 text-center"
+        className="w-full max-w-lg bg-white rounded-3xl border border-cream-dark p-5 sm:p-8 text-center"
       >
         <motion.div
           initial={{ scale: 0 }}
@@ -719,7 +719,7 @@ function SuccessState({ order, onNewOrder }: { order: Order; onNewOrder: () => v
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-3 text-xs text-brown-light/60 mb-6">
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-xs text-brown-light/60 mb-6">
           <span>Pukul {orderTime}</span>
           <span className="w-1 h-1 rounded-full bg-brown-light/30" />
           <span className="capitalize">

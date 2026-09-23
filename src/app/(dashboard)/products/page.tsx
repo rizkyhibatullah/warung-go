@@ -205,24 +205,25 @@ export default function ProductsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-brown">Produk</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-brown">Produk</h1>
           <p className="text-sm text-brown-light mt-1">
             Kelola menu dan produk Forever Caffe
           </p>
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 px-5 py-2.5 bg-terracotta text-white rounded-xl font-medium hover:bg-terracotta-light transition-colors shadow-sm"
+          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-terracotta text-white rounded-xl text-sm font-medium hover:bg-terracotta-light transition-colors shadow-sm shrink-0"
         >
           <PlusIcon className="w-5 h-5" />
-          Tambah Produk
+          <span className="sm:hidden">Tambah</span>
+          <span className="hidden sm:inline">Tambah Produk</span>
         </button>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch sm:items-center justify-between">
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-thin -mx-1 px-1 max-w-full">
           <button
             onClick={() => setActiveCategory("all")}
             className={`px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
@@ -255,13 +256,13 @@ export default function ProductsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Cari produk..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-cream-dark bg-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-sm"
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-cream-dark bg-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-base sm:text-sm"
           />
         </div>
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
           {Array.from({ length: 8 }).map((_, i) => (
             <div
               key={i}
@@ -288,7 +289,7 @@ export default function ProductsPage() {
           variants={container}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"
+          className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5"
         >
           <AnimatePresence mode="popLayout">
             {filtered.map((product) => {
@@ -303,7 +304,7 @@ export default function ProductsPage() {
                   onClick={() => openEdit(product)}
                 >
                   <div
-                    className={`h-40 bg-gradient-to-br ${getGradient(
+                    className={`h-28 sm:h-40 bg-gradient-to-br ${getGradient(
                       product
                     )} flex items-center justify-center relative`}
                   >
@@ -339,34 +340,33 @@ export default function ProductsPage() {
                       </button>
                     </div>
                   </div>
-                  <div className="p-4 space-y-2">
+                  <div className="p-3 sm:p-4 space-y-2">
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-semibold text-charcoal text-sm leading-tight line-clamp-1">
+                      <h3 className="font-semibold text-charcoal text-xs sm:text-sm leading-tight line-clamp-2 min-w-0">
                         {product.name}
                       </h3>
                       <span
-                        className={`px-2 py-0.5 rounded-full text-xs font-medium shrink-0 ${status.color}`}
+                        className={`px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-medium shrink-0 ${status.color}`}
                       >
                         {status.label}
                       </span>
                     </div>
-                    <p className="text-xs text-brown-light/70 line-clamp-1">
+                    <p className="text-[11px] sm:text-xs text-brown-light/70 line-clamp-1 truncate">
                       {product.category?.name}
                     </p>
-                    <div className="flex items-center justify-between pt-1">
-                      <div>
-                        <p className="text-sm font-semibold text-terracotta">
+                    <div className="flex flex-col gap-1 pt-1 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="min-w-0">
+                        <p className="text-xs sm:text-sm font-semibold text-terracotta truncate">
                           {formatCurrency(product.price)}
                         </p>
-                        <p className="text-xs text-brown-light/50">
+                        <p className="text-[10px] sm:text-xs text-brown-light/50 truncate">
                           HPP: {formatCurrency(product.costPrice)}
                         </p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-sm font-medium text-charcoal">
-                          {product.stockQty}
+                      <div className="sm:text-right shrink-0">
+                        <p className="text-xs sm:text-sm font-medium text-charcoal">
+                          {product.stockQty} <span className="text-brown-light/50 font-normal">stok</span>
                         </p>
-                        <p className="text-xs text-brown-light/50">stok</p>
                       </div>
                     </div>
                   </div>
@@ -384,16 +384,17 @@ export default function ProductsPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/40 z-40"
+              className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 sm:p-4"
               onClick={() => setModalOpen(false)}
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: "spring", duration: 0.3 }}
-              className="fixed inset-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-full sm:max-w-lg z-50 bg-white rounded-2xl shadow-xl border border-cream-dark overflow-hidden flex flex-col max-h-[90vh]"
             >
+              <motion.div
+                initial={{ opacity: 0, y: 40, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 40, scale: 0.98 }}
+                transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-white rounded-t-3xl sm:rounded-2xl shadow-xl border border-cream-dark overflow-hidden flex flex-col w-full sm:max-w-lg max-h-[90dvh]"
+              >
               <div className="flex items-center justify-between p-5 border-b border-cream-dark">
                 <h2 className="text-lg font-semibold text-brown">
                   {editingId ? "Edit Produk" : "Tambah Produk"}
@@ -416,7 +417,7 @@ export default function ProductsPage() {
                       type="text"
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-sm"
+                      className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-base sm:text-sm"
                       placeholder="Masukkan nama produk"
                       required
                     />
@@ -443,7 +444,7 @@ export default function ProductsPage() {
                       type="number"
                       value={form.price}
                       onChange={(e) => setForm({ ...form, price: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-sm"
+                      className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-base sm:text-sm"
                       placeholder="0"
                       min="0"
                       required
@@ -458,7 +459,7 @@ export default function ProductsPage() {
                       type="number"
                       value={form.costPrice}
                       onChange={(e) => setForm({ ...form, costPrice: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-sm"
+                      className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-base sm:text-sm"
                       placeholder="0"
                       min="0"
                     />
@@ -472,7 +473,7 @@ export default function ProductsPage() {
                       type="url"
                       value={form.imageUrl}
                       onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-sm"
+                      className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-base sm:text-sm"
                       placeholder="https://... (opsional)"
                     />
                   </div>
@@ -484,7 +485,7 @@ export default function ProductsPage() {
                     <select
                       value={form.categoryId}
                       onChange={(e) => setForm({ ...form, categoryId: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-sm"
+                      className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-base sm:text-sm"
                       required
                     >
                       <option value="">Pilih kategori</option>
@@ -504,7 +505,7 @@ export default function ProductsPage() {
                       type="number"
                       value={form.stockQty}
                       onChange={(e) => setForm({ ...form, stockQty: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-sm"
+                      className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-base sm:text-sm"
                       min="0"
                     />
                   </div>
@@ -519,7 +520,7 @@ export default function ProductsPage() {
                       onChange={(e) =>
                         setForm({ ...form, minStockAlert: e.target.value })
                       }
-                      className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-sm"
+                      className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-base sm:text-sm"
                       min="0"
                     />
                   </div>
@@ -542,6 +543,7 @@ export default function ProductsPage() {
                   </button>
                 </div>
               </form>
+              </motion.div>
             </motion.div>
           </>
         )}

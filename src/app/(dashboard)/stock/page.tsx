@@ -192,11 +192,11 @@ export default function StockPage() {
       )}
 
       <div className="bg-white rounded-2xl border border-cream-dark overflow-hidden">
-        <div className="p-5 border-b border-cream-dark">
-          <h2 className="text-lg font-semibold text-brown">Daftar Stok Produk</h2>
+        <div className="p-4 sm:p-5 border-b border-cream-dark">
+          <h2 className="text-base sm:text-lg font-semibold text-brown">Daftar Stok Produk</h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[640px] text-sm">
             <thead>
               <tr className="bg-cream/50">
                 <th className="text-left px-5 py-3 font-medium text-brown-light">
@@ -280,20 +280,20 @@ export default function StockPage() {
                           </span>
                         </td>
                         <td className="px-5 py-4 text-right">
-                          <div className="flex items-center justify-end gap-2">
+                          <div className="flex flex-col min-[420px]:flex-row items-stretch min-[420px]:items-center justify-end gap-2">
                             <button
                               onClick={() => openAdjust("in", product.id)}
-                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-success/10 text-success hover:bg-success/20 transition-colors text-xs font-medium"
+                              className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-success/10 text-success hover:bg-success/20 transition-colors text-xs font-medium whitespace-nowrap"
                             >
-                              <PlusIcon className="w-3.5 h-3.5" />
+                              <PlusIcon className="w-3.5 h-3.5 shrink-0" />
                               Tambah
                             </button>
                             <button
                               onClick={() => openAdjust("out", product.id)}
                               disabled={product.stockQty <= 0}
-                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-terracotta/10 text-terracotta hover:bg-terracotta/20 transition-colors text-xs font-medium disabled:opacity-40 disabled:cursor-not-allowed"
+                              className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-terracotta/10 text-terracotta hover:bg-terracotta/20 transition-colors text-xs font-medium disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
                             >
-                              <MinusIcon className="w-3.5 h-3.5" />
+                              <MinusIcon className="w-3.5 h-3.5 shrink-0" />
                               Kurangi
                             </button>
                           </div>
@@ -317,13 +317,13 @@ export default function StockPage() {
       </div>
 
       <div className="bg-white rounded-2xl border border-cream-dark overflow-hidden">
-        <div className="p-5 border-b border-cream-dark">
-          <h2 className="text-lg font-semibold text-brown">
+        <div className="p-4 sm:p-5 border-b border-cream-dark">
+          <h2 className="text-base sm:text-lg font-semibold text-brown">
             Riwayat Mutasi Stok
           </h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[720px] text-sm">
             <thead>
               <tr className="bg-cream/50">
                 <th className="text-left px-5 py-3 font-medium text-brown-light">
@@ -424,16 +424,17 @@ export default function StockPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/40 z-40"
+              className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 sm:p-4"
               onClick={() => setModalOpen(false)}
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ type: "spring", duration: 0.3 }}
-              className="fixed inset-4 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-full sm:max-w-md z-50 bg-white rounded-2xl shadow-xl border border-cream-dark overflow-hidden"
             >
+              <motion.div
+                initial={{ opacity: 0, y: 40, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 40, scale: 0.98 }}
+                transition={{ type: "spring", duration: 0.3, bounce: 0 }}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-white rounded-t-3xl sm:rounded-2xl shadow-xl border border-cream-dark overflow-hidden w-full sm:max-w-md max-h-[90dvh] overflow-y-auto"
+              >
               <div className="flex items-center justify-between p-5 border-b border-cream-dark">
                 <h2 className="text-lg font-semibold text-brown">
                   {adjustType === "in" ? "Tambah Stok" : "Kurangi Stok"}
@@ -454,7 +455,7 @@ export default function StockPage() {
                   <select
                     value={selectedProductId}
                     onChange={(e) => setSelectedProductId(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-sm"
+                    className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-base sm:text-sm"
                     required
                   >
                     <option value="">Pilih produk</option>
@@ -506,7 +507,7 @@ export default function StockPage() {
                     type="number"
                     value={changeQty}
                     onChange={(e) => setChangeQty(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-sm"
+                    className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-base sm:text-sm"
                     placeholder="Masukkan jumlah"
                     min="1"
                     required
@@ -521,7 +522,7 @@ export default function StockPage() {
                     type="text"
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
-                    className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-sm"
+                    className="w-full px-3 py-2.5 rounded-xl border border-cream-dark bg-off-white text-charcoal placeholder:text-brown-light/50 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-all text-base sm:text-sm"
                     placeholder="Misal: restock dari supplier"
                   />
                 </div>
@@ -543,6 +544,7 @@ export default function StockPage() {
                   </button>
                 </div>
               </form>
+              </motion.div>
             </motion.div>
           </>
         )}

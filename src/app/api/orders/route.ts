@@ -10,11 +10,13 @@ async function notifyTelegram(order: any) {
   const itemsText = order.items.map((i: any) => `• ${i.product.name} x${i.qty} — Rp ${Number(i.subtotal).toLocaleString("id-ID")}`).join("\n")
   const caraTerima = order.deliveryMethod === "delivery" ? `Antar ke:\n${order.deliveryAddress || "-"}` : "Ambil di warung"
   const bayar = order.paymentMethod === "qris" ? "QRIS (lunas)" : "Bayar di warung (counter)"
+  const phoneLine = order.phone ? `WA: ${order.phone}\n` : ""
   const catatan = order.notes ? `\nCatatan: ${order.notes}` : ""
 
   const text =
     `🔔 Pesanan Baru #${idShort}\n` +
     `Nama: ${order.customerName}\n` +
+    `${phoneLine}` +
     `Bayar: ${bayar}\n` +
     `Terima: ${caraTerima}${catatan}\n\n` +
     `${itemsText}\n\n` +
@@ -46,10 +48,17 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { customerName, notes, items, paymentMethod = "counter", deliveryMethod, deliveryAddress } = body
+    const { customerName, phone, notes, items, paymentMethod = "counter", deliveryMethod, deliveryAddress } = body
 
     if (!customerName || !items || !items.length) {
       return Response.json({ error: "Nama dan pesanan harus diisi" }, { status: 400 })
+    }
+    if (!phone || !String(phone).trim()) {
+      return Response.json({ error: "No. HP/WA harus diisi" }, { status: 400 })
+    }
+    const phoneTrimmed = String(phone).trim()
+    if (!/^[0-9+\-\s()]{9,20}$/.test(phoneTrimmed)) {
+      return Response.json({ error: "Format No. HP/WA tidak valid" }, { status: 400 })
     }
 
     if (paymentMethod !== "counter" && paymentMethod !== "qris") {
@@ -89,6 +98,7 @@ export async function POST(request: Request) {
         const created = await tx.order.create({
           data: {
             customerName,
+            phone: phoneTrimmed,
             notes: notes || null,
             status: "confirmed",
             paymentMethod: "qris",
@@ -118,6 +128,7 @@ export async function POST(request: Request) {
       const created = await tx.order.create({
         data: {
           customerName,
+          phone: phoneTrimmed,
           notes: notes || null,
           paymentMethod: "counter",
           deliveryMethod: deliveryMethod === "delivery" ? "delivery" : "pickup",

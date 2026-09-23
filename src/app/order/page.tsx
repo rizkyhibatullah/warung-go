@@ -47,6 +47,7 @@ interface OrderItemData {
 interface Order {
   id: string
   customerName: string
+  phone: string | null
   notes: string | null
   status: string
   paymentMethod?: string
@@ -63,6 +64,7 @@ export default function OrderPage() {
   const [loading, setLoading] = useState(true)
   const [cartOpen, setCartOpen] = useState(false)
   const [customerName, setCustomerName] = useState("")
+  const [phone, setPhone] = useState("")
   const [notes, setNotes] = useState("")
   const [deliveryMethod, setDeliveryMethod] = useState<"pickup" | "delivery">("pickup")
   const [address, setAddress] = useState("")
@@ -145,6 +147,14 @@ export default function OrderPage() {
       toast.error("Nama pelanggan harus diisi")
       return
     }
+    if (!phone.trim()) {
+      toast.error("No. HP/WA harus diisi")
+      return
+    }
+    if (!/^[0-9+\-\s()]{9,20}$/.test(phone.trim())) {
+      toast.error("Format No. HP/WA tidak valid")
+      return
+    }
     if (deliveryMethod === "delivery" && !address.trim()) {
       toast.error("Alamat pengiriman harus diisi")
       return
@@ -160,6 +170,7 @@ export default function OrderPage() {
         headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             customerName: customerName.trim(),
+            phone: phone.trim(),
             notes: notes.trim() ? notes.trim() : null,
             paymentMethod,
             deliveryMethod,
@@ -173,6 +184,7 @@ export default function OrderPage() {
       clearCart()
       setCartOpen(false)
       setCustomerName("")
+      setPhone("")
       setNotes("")
       setAddress("")
       setDeliveryMethod("pickup")
@@ -182,7 +194,7 @@ export default function OrderPage() {
     } finally {
       setSubmitting(false)
     }
-  }, [customerName, notes, items, clearCart, paymentMethod])
+  }, [customerName, phone, notes, deliveryMethod, address, items, clearCart, paymentMethod])
 
   const handleQrisConfirm = async () => {
     setQrisConfirming(true)
@@ -468,6 +480,19 @@ export default function OrderPage() {
                     </div>
 
                     <div>
+                      <label className="block text-xs font-medium text-brown-light mb-1">
+                        No. HP / WA <span className="text-terracotta">*</span>
+                      </label>
+                      <input
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="08xxxxxxxxxx"
+                        className="w-full px-3 py-2 rounded-xl border border-cream-dark bg-white text-sm placeholder:text-brown-light/30 focus:outline-none focus:ring-2 focus:ring-terracotta/30 focus:border-terracotta transition-shadow"
+                      />
+                    </div>
+
+                    <div>
                       <label className="block text-xs font-medium text-brown-light mb-2">Cara Terima</label>
                       <div className="grid grid-cols-2 gap-2">
                         <button
@@ -666,6 +691,13 @@ function SuccessState({ order, onNewOrder }: { order: Order; onNewOrder: () => v
                 <span className="text-brown font-medium">{formatCurrency(item.subtotal)}</span>
               </div>
             ))}
+          </div>
+
+          <div className="flex items-center justify-between text-sm pt-3 border-t border-cream-dark">
+            <span className="text-brown-light">No. HP / WA</span>
+            <a href={`https://wa.me/${order.phone?.replace(/[^0-9]/g, "").replace(/^0/, "62")}`} target="_blank" rel="noopener noreferrer" className="text-brown font-medium hover:text-terracotta transition-colors">
+              {order.phone || "-"}
+            </a>
           </div>
 
           <div className="flex items-center justify-between text-sm pt-3 border-t border-cream-dark">

@@ -135,6 +135,7 @@ enum OrderStatus {
 model Order {
   id              String              @id @default(cuid())
   customerName    String              @map("customer_name")
+  phone           String?             @map("phone")
   notes           String?
   status          OrderStatus         @default(pending)
   paymentMethod   OrderPaymentMethod  @default(counter) @map("payment_method")

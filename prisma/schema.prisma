@@ -84,6 +84,7 @@ model StockLog {
   product   Product       @relation(fields: [productId], references: [id])
   user      User          @relation(fields: [createdBy], references: [id])
 
+  @@index([productId])
   @@map("stock_logs")
 }
 
@@ -100,6 +101,8 @@ model Transaction {
   cashier       User               @relation(fields: [cashierId], references: [id])
   items         TransactionItem[]
 
+  @@index([createdAt])
+  @@index([status, createdAt])
   @@map("transactions")
 }
 
@@ -113,6 +116,7 @@ model TransactionItem {
   transaction   Transaction @relation(fields: [transactionId], references: [id])
   product       Product     @relation(fields: [productId], references: [id])
 
+  @@index([transactionId])
   @@map("transaction_items")
 }
 
@@ -143,6 +147,7 @@ model Order {
   deliveryAddress String?             @map("delivery_address")
   createdAt       DateTime            @default(now()) @map("created_at")
   items           OrderItem[]
+  @@index([status, createdAt])
   @@map("orders")
 }
 
@@ -156,6 +161,7 @@ model OrderItem {
   order       Order   @relation(fields: [orderId], references: [id])
   product     Product @relation(fields: [productId], references: [id])
 
+  @@index([orderId])
   @@map("order_items")
 }
 

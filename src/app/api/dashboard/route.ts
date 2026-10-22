@@ -11,7 +11,11 @@ export async function GET() {
     const now = new Date()
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
     const todayEnd = new Date(todayStart.getTime() + 86400000)
+    const weekStart = new Date(now.getTime() - 6 * 86400000)
+    const yearStart = new Date(now.getFullYear() - 1, now.getMonth(), 1)
 
+    // Semua agregasi berat dikerjakan database dalam 1 round-trip per query,
+    // bukan dengan memuat seluruh histori transaksi ke memori Node.
     const [
       todayTransactions,
       todayRaw,
@@ -19,7 +23,7 @@ export async function GET() {
       monthlyRaw,
       topProductsRaw,
       lowStockProducts,
-      allPaidTransactions,
+      profitRaw,
     ] = await Promise.all([
       prisma.transaction.count({
         where: { status: "paid", createdAt: { gte: todayStart, lt: todayEnd } },
@@ -29,38 +33,35 @@ export async function GET() {
         _sum: { total: true },
       }),
       prisma.transaction.findMany({
-        where: { status: "paid", createdAt: { gte: new Date(now.getTime() - 6 * 86400000) } },
+        where: { status: "paid", createdAt: { gte: weekStart } },
         select: { total: true, createdAt: true },
         orderBy: { createdAt: "asc" },
       }),
       prisma.transaction.findMany({
-        where: { status: "paid", createdAt: { gte: new Date(now.getFullYear() - 1, now.getMonth(), 1) } },
+        where: { status: "paid", createdAt: { gte: yearStart } },
         select: { total: true, createdAt: true },
         orderBy: { createdAt: "asc" },
       }),
-      prisma.transactionItem.groupBy({
-        by: ["productId"],
-        _sum: { qty: true },
-        orderBy: { _sum: { qty: "desc" } },
-        take: 5,
-      }),
+      prisma.$queryRaw<Array<{ productId: string; name: string; totalQty: number }>>`
+        SELECT ti.product_id AS "productId", p.name AS name, SUM(ti.qty)::int AS "totalQty"
+        FROM transaction_items ti
+        JOIN products p ON p.id = ti.product_id
+        GROUP BY ti.product_id, p.name
+        ORDER BY SUM(ti.qty) DESC
+        LIMIT 5
+      `,
       prisma.$queryRawUnsafe<
         Array<{ id: string; name: string; stock_qty: number; min_stock_alert: number }>
       >(
         `SELECT id, name, stock_qty, min_stock_alert FROM products WHERE is_active = true AND stock_qty <= min_stock_alert`
       ),
-      prisma.transaction.findMany({
-        where: { status: "paid" },
-        select: {
-          items: {
-            select: {
-              qty: true,
-              priceAtSale: true,
-              product: { select: { costPrice: true } },
-            },
-          },
-        },
-      }),
+      prisma.$queryRaw<Array<{ totalRevenue: number; totalCost: number }>>`
+        SELECT COALESCE(SUM(ti.qty * ti.price_at_sale), 0)::float AS "totalRevenue",
+               COALESCE(SUM(ti.qty * p.cost_price), 0)::float AS "totalCost"
+        FROM transaction_items ti
+        JOIN transactions t ON t.id = ti.transaction_id AND t.status = 'paid'
+        JOIN products p ON p.id = ti.product_id
+      `,
     ])
 
     const todayRevenue = todayRaw._sum.total ?? 0
@@ -87,19 +88,11 @@ export async function GET() {
       monthlyRevenue.push({ month: key, revenue: monthlyMap.get(key) ?? 0 })
     }
 
-    const topProductIds = topProductsRaw.map((p: { productId: string }) => p.productId)
-    const topProductsRawData = await prisma.product.findMany({
-      where: { id: { in: topProductIds } },
-      select: { id: true, name: true, price: true },
-    })
-    const topProductsMap = new Map<string, { id: string; name: string; price: number }>(
-      topProductsRawData.map((p: any) => [p.id, p as { id: string; name: string; price: number }])
-    )
     const topProducts = topProductsRaw.map(
-      (p: { productId: string; _sum: { qty: number | null } }) => ({
+      (p: { productId: string; name: string; totalQty: number | string }) => ({
         productId: p.productId,
-        name: topProductsMap.get(p.productId)?.name ?? "Unknown",
-        totalQty: p._sum.qty ?? 0,
+        name: p.name ?? "Unknown",
+        totalQty: Number(p.totalQty) ?? 0,
       })
     )
 
@@ -110,15 +103,8 @@ export async function GET() {
       minStockAlert: p.min_stock_alert,
     }))
 
-    let totalRevenue = 0
-    let totalCost = 0
-    for (const tx of allPaidTransactions) {
-      for (const item of tx.items) {
-        totalRevenue += item.priceAtSale * item.qty
-        totalCost += (item.product?.costPrice ?? 0) * item.qty
-      }
-    }
-
+    const totalRevenue = Number(profitRaw[0]?.totalRevenue ?? 0)
+    const totalCost = Number(profitRaw[0]?.totalCost ?? 0)
     const profitSummary = {
       totalRevenue,
       totalCost,

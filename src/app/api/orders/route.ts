@@ -35,8 +35,29 @@ async function notifyTelegram(order: any) {
 
 export async function GET() {
   try {
+    // Frontend (POS polling tiap 5 dtk & halaman order) hanya memakai
+    // item.product.name — kolom produk lain tidak ikut di-fetch.
     const orders = await prisma.order.findMany({
-      include: { items: { include: { product: true } } },
+      select: {
+        id: true,
+        customerName: true,
+        phone: true,
+        notes: true,
+        status: true,
+        paymentMethod: true,
+        deliveryMethod: true,
+        deliveryAddress: true,
+        createdAt: true,
+        items: {
+          select: {
+            id: true,
+            qty: true,
+            priceAtOrder: true,
+            subtotal: true,
+            product: { select: { id: true, name: true, imageUrl: true } },
+          },
+        },
+      },
       orderBy: { createdAt: "desc" },
     })
     return Response.json(orders)

@@ -6,24 +6,69 @@ interface TransactionItemInput {
   qty: number
 }
 
-export async function GET() {
+interface TransactionRow {
+  id: string
+  invoiceNo: string
+  paymentMethod: string
+  subtotal: number
+  discount: number
+  total: number
+  status: string
+  createdAt: Date
+  cashier: { id: string; name: string }
+  items: Array<{
+    id: string
+    qty: number
+    priceAtSale: number
+    subtotal: number
+    product: { id: string; name: string }
+  }>
+}
+
+export async function GET(request: Request) {
   try {
     const session = await auth()
     if (!session?.user) {
       return Response.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const transactions = await prisma.transaction.findMany({
-      include: {
-        items: {
-          include: { product: true },
-        },
-        cashier: {
-          select: { id: true, name: true, email: true },
-        },
-      },
-      orderBy: { createdAt: "desc" },
-    })
+    // Batasi jumlah baris agar payload tidak membengkak seiring waktu.
+    const { searchParams } = new URL(request.url)
+    const limit = Math.min(
+      Math.max(parseInt(searchParams.get("limit") ?? "100", 10) || 100, 1),
+      500
+    )
+
+    // Satu query agregat (transaksi + item + nama produk/kasir) supaya hanya
+    // 1 round-trip ke database, bukan 2 query berurutan seperti sebelumnya.
+    // Kolom dibatasi ke yang dipakai frontend (item.product.name, cashier.name).
+    const transactions = await prisma.$queryRaw<TransactionRow[]>`
+      SELECT t.id,
+             t.invoice_no AS "invoiceNo",
+             t.payment_method AS "paymentMethod",
+             t.subtotal, t.discount, t.total, t.status,
+             t.created_at AS "createdAt",
+             json_build_object('id', u.id, 'name', u.name) AS cashier,
+             COALESCE(
+               json_agg(
+                 json_build_object(
+                   'id', ti.id,
+                   'qty', ti.qty,
+                   'priceAtSale', ti.price_at_sale,
+                   'subtotal', ti.subtotal,
+                   'product', json_build_object('id', p.id, 'name', p.name)
+                 ) ORDER BY ti.id
+               ) FILTER (WHERE ti.id IS NOT NULL),
+               '[]'
+             ) AS items
+      FROM transactions t
+      JOIN users u ON u.id = t.cashier_id
+      LEFT JOIN transaction_items ti ON ti.transaction_id = t.id
+      LEFT JOIN products p ON p.id = ti.product_id
+      GROUP BY t.id, u.id, u.name
+      ORDER BY t.created_at DESC
+      LIMIT ${limit}
+    `
 
     return Response.json(transactions)
   } catch (error) {
